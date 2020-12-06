@@ -1,48 +1,30 @@
 import java.io.File
 
-fun q1() {
-    var minCount = 0
-    var maxCount = 0
-    var charToCount: Char?
-    var password = ""
-    var nbrValid = 0
+class Day2 {
+    companion object {
 
-    File("C:/Users/gusta/Documents/Egenstudier/AoC2020/main/input/input2.txt").forEachLine {line ->
-        val split = line.split("-", " ", ":")
-        minCount = split[0].toInt()
-        maxCount = split[1].toInt()
-        charToCount = split[2].single()
-        password = split[4]
-        val count = password.filter {it == charToCount}.count()
-        if (count >= minCount && count <= maxCount) {nbrValid++}
+        fun q1() {
+            val list = File("""C:\Users\gusta\Documents\Egenstudier\AoC\2020\input\input2.txt""")
+                .readLines()
+            println(list.map { str ->
+                val (lower, upper, v, pw) = """(\d+)-(\d+) (\w): (\w+)""".toRegex().find(str)!!.destructured
+                pw.count { it == v.single() } in (lower.toInt()..upper.toInt())
+            }.count { it })
+        }
+
+        fun q2() {
+            val list = File("""C:\Users\gusta\Documents\Egenstudier\AoC\2020\input\input2.txt""")
+                .readLines()
+            println(list.map { str ->
+                val (first, second, v, pw) = """(\d+)-(\d+) (\w): (\w+)""".toRegex().find(str)!!.destructured
+                (pw[first.toInt() - 1] == v.single()) xor (pw[second.toInt() - 1] == v.single())
+            }.count { it })
+        }
     }
-    println("Found $nbrValid valid passwords.")
-}
-
-fun q2() {
-    var idx1 = 0
-    var idx2 = 0
-    var charToCount: Char?
-    var password = ""
-    var nbrValid = 0
-    var totalNbr = 0
-
-    File("C:/Users/gusta/Documents/Egenstudier/AoC-2020/2/input/input.txt").forEachLine {line ->
-        totalNbr++
-        val split = line.split("-", " ", ":")
-        idx1 = split[0].toInt()
-        idx2 = split[1].toInt()
-        charToCount = split[2].single()
-        password = split[4]
-        if (password[idx1 - 1] == charToCount) {
-            if (password[idx2 - 1]  != charToCount) {nbrValid++}
-        } else if (password[idx2 - 1] == charToCount) {nbrValid++}
-    }
-    println("Found $nbrValid valid passwords.")
 }
 
 
 fun main() {
-    q1()
-    q2()
+    Day2.q1()
+    Day2.q2()
 }

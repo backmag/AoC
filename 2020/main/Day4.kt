@@ -2,7 +2,6 @@ import java.io.File
 
 class Day4 {
     companion object {
-
         fun q1() {
             var list = mutableListOf<List<String>>()
             var currentPairs = mutableListOf<String>()
