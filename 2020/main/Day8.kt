@@ -2,11 +2,17 @@ import java.io.File
 
 class Day8 {
     companion object {
+
         fun q1() {
+            val list = File("C:\\Users\\gusta\\Documents\\Egenstudier\\AoC\\2020\\input\\input8.txt").readLines()
+            tryRun(list,true)
+        }
+
+        fun q2() {
             val list = File("C:\\Users\\gusta\\Documents\\Egenstudier\\AoC\\2020\\input\\input8.txt").readLines()
             list.forEachIndexed { idx, s ->
                 val r = """(\w+) ([+-]\d+)""".toRegex()
-                val (op,v) = r.find(s)!!.destructured
+                val (op, v) = r.find(s)!!.destructured
                 if (op == "jmp") {
                     var listCopy = list.toMutableList()
                     listCopy[idx] = "nop +0"
@@ -19,7 +25,7 @@ class Day8 {
             }
         }
 
-        private fun tryRun(list: List<String>) {
+        private fun tryRun(list: List<String>, verbose: Boolean = false) {
             var acc = 0
             var nextLine = 0
             var visitedRows = mutableSetOf<Int>()
@@ -30,6 +36,9 @@ class Day8 {
                 }
                 val info = processLine(list[nextLine])
                 if (nextLine in visitedRows) {
+                    if (verbose) {
+                        println("Infinite loop at acc: $acc")
+                    }
                     break
                 }
                 visitedRows.add(nextLine)
@@ -40,20 +49,17 @@ class Day8 {
 
         private fun processLine(line: String): List<Int> { // Returns relativePos, accDiff
             val r = """(\w+) ([+-]\d+)""".toRegex()
-            val (op,v) = r.find(line)!!.destructured
+            val (op, v) = r.find(line)!!.destructured
             return when (op) {
                 "acc" -> listOf(1, v.toInt())
                 "jmp" -> listOf(v.toInt(), 0)
-                else -> listOf(1,0)
+                else -> listOf(1, 0)
             }
-        }
-
-        fun q2() {
-
         }
     }
 }
 
 fun main() {
     Day8.q1()
+    Day8.q2()
 }
