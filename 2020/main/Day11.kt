@@ -14,7 +14,8 @@ class Day11 {
             while (!equal) {
                 newList = update(list).map { it.joinToString("") }.toMutableList()
                 equal = checkEqual(newList, list)
-                list = newList
+                list.clear()
+                newList.forEach {list.add(it)}
                 println("itr: $itr")
                 itr++
                 for (i in list.indices) {
@@ -46,14 +47,14 @@ class Day11 {
             var rows = list.size
             for (col in 0 until cols) {
                 for (row in 0 until rows) {
-                    val newChar = updateSeat(col, row, list)
+                    val newChar = updateSeat(col, row, updatedList)
                     updatedList[row][col] = newChar
                 }
             }
             return updatedList
         }
 
-        fun updateSeat(col: Int, row: Int, list: List<String>): Char {
+        fun updateSeat(col: Int, row: Int, list: List<CharArray>): Char {
             if (list[row][col] == ".".single()) {
                 return ".".single()
             }
@@ -65,11 +66,13 @@ class Day11 {
             return "L".single()
         }
 
-        fun countAdjacent(col: Int, row: Int, list: List<String>): Int {
+        fun countAdjacent(col: Int, row: Int, list: List<CharArray>): Int {
             if (col == 0) {
                 if (row == 0) {
+                    println("CORNER 1")
                     return listOf<Char>(list[0][1], list[1][0], list[1][1]).count { it == "#".single() }
                 } else if (row == list.size - 1) {
+                    println("CORNER 2")
                     return listOf<Char>(
                         list[list.size - 2][1],
                         list[list.size - 2][0],
@@ -81,18 +84,28 @@ class Day11 {
                         list[row + 1][col + 1], list[row + 1][col]
                     ).count { it == "#".single() }
                 }
-            } else if (col == list[0].length - 1) {
+            } else if (col == list[0].size - 1) {
                 if (row == 0) {
+                    println("CORNER 3 ADJ ${listOf<Char>(
+                        list[0][list[0].size - 2],
+                        list[1][list[0].size - 1],
+                        list[1][list[0].size - 2]
+                    ).count { it == "#".single() }}")
                     return listOf<Char>(
-                        list[0][list[0].length - 2],
-                        list[1][list[0].length - 1],
-                        list[1][list[0].length - 2]
+                        list[0][list[0].size - 2],
+                        list[1][list[0].size - 1],
+                        list[1][list[0].size - 2]
                     ).count { it == "#".single() }
                 } else if (row == list.size - 1) {
+                    println("CORNER 4 ADJ ${listOf<Char>(
+                        list[list.size - 1][list[0].size - 2],
+                        list[list.size - 2][list[0].size - 1],
+                        list[list.size - 2][list[0].size - 2]
+                    ).count { it == "#".single() }}")
                     return listOf<Char>(
-                        list[list.size - 1][list[0].length - 2],
-                        list[list.size - 2][list[0].length - 1],
-                        list[list.size - 2][list[0].length - 2]
+                        list[list.size - 1][list[0].size - 2],
+                        list[list.size - 2][list[0].size - 1],
+                        list[list.size - 2][list[0].size - 2]
                     ).count { it == "#".single() }
                 } else {
                     return listOf<Char>(
@@ -100,24 +113,24 @@ class Day11 {
                         list[row + 1][col - 1], list[row + 1][col]
                     ).count { it == "#".single() }
                 }
+            }
+            if (row == 0) {
+                return listOf<Char>(
+                    list[row][col - 1], list[row][col + 1], list[row + 1][col - 1],
+                    list[row + 1][col], list[row + 1][col + 1]
+                ).count { it == "#".single() }
+            } else if (row == list.size - 1) {
+                return listOf<Char>(
+                    list[row][col - 1], list[row][col + 1], list[row - 1][col - 1],
+                    list[row - 1][col], list[row - 1][col + 1]
+                ).count { it == "#".single() }
             } else {
-                if (row == 0) {
-                    return listOf<Char>(
-                        list[row][col - 1], list[row][col + 1], list[row + 1][col - 1],
-                        list[row + 1][col], list[row + 1][col + 1]
-                    ).count { it == "#".single() }
-                } else if (row == list.size - 1) {
-                    return listOf<Char>(
-                        list[row][col - 1], list[row][col + 1], list[row - 1][col - 1],
-                        list[row - 1][col], list[row - 1][col + 1]
-                    ).count { it == "#".single() }
-                } else {
-                    return listOf<Char>(
-                        list[row - 1][col - 1], list[row - 1][col], list[row - 1][col + 1],
-                        list[row][col - 1], list[row][col + 1],
-                        list[row + 1][col - 1], list[row + 1][col], list[row + 1][col + 1]
-                    ).count { it == "#".single() }
-                }
+                return listOf<Char>(
+                    list[row - 1][col - 1], list[row - 1][col], list[row - 1][col + 1],
+                    list[row][col - 1], list[row][col + 1],
+                    list[row + 1][col - 1], list[row + 1][col], list[row + 1][col + 1]
+                ).count { it == "#".single() }
+
             }
         }
 
