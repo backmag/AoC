@@ -66,11 +66,43 @@ class Day14 {
         fun q2() {
             var list = File("C:\\Users\\gusta\\Documents\\Egenstudier\\AoC\\2020\\input\\input14.txt")
                 .readLines()
+            var listIdx = 0
+            var nbrs = mutableListOf<String>()
+            var mask = ""
+            var first = true
+            while (listIdx < list.size) {
+                if (list[listIdx].startsWith("ma")) {
+                    if (first) {
+                        mask = list[listIdx]
+                        first = false
+                    } else {
+                        nbrs.forEach { decode(it, mask) }
+                        mask = list[listIdx]
+                        nbrs = mutableListOf<String>()
+                    }
+                } else {
+                    nbrs.add(list[listIdx])
+                }
+                listIdx++
+            }
+            nbrs.forEach { decode(it, mask) }
         }
+        fun decode(c: String, mask: String) {
+            var (idxS, vS) = """\w+\[(\d+)\] = (\d+)""".toRegex().find(c)!!.destructured
+            var idx = idxS.toInt()
+            var v = vS.toInt()
+            var res = decodeBitwise(idx, mask)
+        }
+
+        fun decodeBitwise(idx: Int, mask: String) { // Max 9 Xs in one mask
+
+        }
+
+
     }
 }
 
 fun main() {
-    Day14.q1()
-//    Day14.q2()
+//    Day14.q1()
+    Day14.q2()
 }
